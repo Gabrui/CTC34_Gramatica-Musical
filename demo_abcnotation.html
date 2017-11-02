@@ -10,6 +10,8 @@
 	<link href="abcjs-midi.css" media="all" rel="stylesheet" type="text/css" />
 	<script src="abcjs_editor_midi_3.1.3-min.js" type="text/javascript"></script>
         <script type="text/javascript"> window.ABCJS.midi.soundfontUrl = "soundfont/"; </script>
+        <script src="./gramatica/parser.js"></script>
+        <script src="./tradutor/escritorAbc.js"></script>
 	<style>
 		.abcjs-inline-midi {
 			max-width: 740px;
@@ -39,17 +41,21 @@ textarea#note {
 <table style="width:100%">
     <tr>
         <th>
-<textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%">X: 1
-T: Cooley's
-M: 4/4
-L: 1/8
-R: reel
-K: Emin
-|:D2|EB{c}BA B2 EB|~B2 AB dBAG|FDAD BDAD|FDAD dAFD|
-EBBA B2 EB|B2 AB defg|afe^c dBAF|DEFD E2:|
-|:gf|eB B2 efge|eB B2 gedB|A2 FA DAFA|A2 FA defg|
-eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
+<textarea name="area" id="area" cols="80" rows="15" onkeyup="processarTxt(this)" style="height: 100%">
+Titulo: Doremifá
+
+do re mi faa fa faa do re do ree re ree do sol fa mii mi mii do re mi faa fa faa
+        
 </textarea>
+            <textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%;display:none">
+            T: Doremifá
+X: 1
+K: 4/4
+L: 1/4
+C D E  (F|F) F F2 | C D C  (D|D) D D2 | 
+C G F  (E|E) E E2 | C D E  (F|F) F F2 | 
+|]
+            </textarea>
             </th>
             <th>
 <div id="paper0"></div>
@@ -96,9 +102,9 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 		var el = document.getElementById("selection");
 		el.innerHTML = "<b>selectionCallback parameter:</b><br>" + JSON.stringify(note);
 	}
-
+var abcjs;
 	function initEditor() {
-		new ABCJS.Editor("abc", { paper_id: "paper0",
+		abcjs = new ABCJS.Editor("abc", { paper_id: "paper0",
 			generate_midi: true,
 			midi_id:"midi",
 			midi_download_id: "midi-download",
@@ -112,6 +118,12 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 			}
 		});
 	}
+        function processarTxt(element){
+            console.log(element.value);
+            document.getElementById("abc").value = traduzirAbc(arvoreLexical.parse(element.value));
+            console.log(document.getElementById("abc").value);
+            abcjs.fireChanged();
+        }
 
 	window.addEventListener("load", initEditor, false);
 </script>
