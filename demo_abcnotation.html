@@ -25,16 +25,21 @@
     background-attachment: fixed;
     background-size: 1920px 1200px
 }
+textarea#note {
+	width:100%;
+        resize: both;
+}
     </style>
 </head>
 
 <h1 style="text-align:left;font-family:verdana;color: whitesmoke">Music Writer
     
 </h1>
+<div>
 <table style="width:100%">
     <tr>
         <th>
-<textarea name="abc" id="abc" cols="80" rows="15">X: 1
+<textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%">X: 1
 T: Cooley's
 M: 4/4
 L: 1/8
@@ -57,6 +62,7 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 </th>
     </tr>
 </table>
+</div>
 
 
 <hr />
@@ -70,15 +76,15 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 <!id to drawnin>
 <div id="selection"></div>
 <footer>
-    <p style="font-family:verdana;color: whitesmoke"><b>abcjs</b> is an open source javascript rendering engine for interpreting abc formatted tunes.
+    <p style="font-family:verdana;color: black"><b>abcjs</b> is an open source javascript rendering engine for interpreting abc formatted tunes.
 	It will render sheet music entirely in your browser.
 	It was written in 2009-2011 by Gregory Dyke and Paul Rosen.
 	This page demonstrates a simple implementation of it so you can see how to use it in your own pages.
 </p>
-<p style="font-family:verdana;color: whitesmoke">Type or paste an abc tune in the area below and see it rendered as you type. Also notice that you can click on the drawn notes and
+<p style="font-family:verdana;color: black">Type or paste an abc tune in the area below and see it rendered as you type. Also notice that you can click on the drawn notes and
 	see the place in the text where that note is defined.</p>
 
-<p style="font-family:verdana;color: whitesmoke">For more information, see <a href="https://github.com/paulrosen/abcjs" >the project page</a>.</p></footer>
+<p style="font-family:verdana;color: black">For more information, see <a href="https://github.com/paulrosen/abcjs" >the project page</a>.</p></footer>
 <script type="text/javascript">
 	function selectionCallback(abcelem) {
 		var note = {};
@@ -108,7 +114,6 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 	}
 
 	window.addEventListener("load", initEditor, false);
-        
 </script>
 
 </html>
