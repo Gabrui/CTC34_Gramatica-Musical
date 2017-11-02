@@ -68,6 +68,12 @@ function traduzirAbc (arvoreLexical) {
                 saidaAbc += imprimir(nota)+" ";
         }
     }
+    var diminuir = 0;
+    if (saidaAbc.endsWith("\n"))
+        diminuir = 3;
+    if (saidaAbc.endsWith("| "))
+        diminuir=2;
+    saidaAbc = saidaAbc.substr(0, saidaAbc.length - diminuir);
     saidaAbc += "|]";
     return saidaAbc;
 }
