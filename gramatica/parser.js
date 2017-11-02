@@ -148,7 +148,7 @@ arvoreLexical = /*
         peg$c4 = peg$classExpectation(["\n"], true, false),
         peg$c5 = /^[\n]/,
         peg$c6 = peg$classExpectation(["\n"], false, false),
-        peg$c7 = function(titulo) {return {"Titulo": titulo.join("")};},
+        peg$c7 = function(titulo) {return {"T": titulo.join("")};},
         peg$c8 = function(n, aci, temp) {if (aci!=null) n.push(aci); if (temp!=null) n[2]*=temp; return n},
         peg$c9 = "#",
         peg$c10 = peg$literalExpectation("#", false),

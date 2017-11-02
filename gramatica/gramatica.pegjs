@@ -1,6 +1,6 @@
 Dynota = c:Cabecalho _ p:Pentagrama _ {return [c, p];}
 
-Cabecalho = "Titulo:" _ titulo:([^\n]*) [\n] {return {"Titulo": titulo.join("")};}
+Cabecalho = "Titulo:" _ titulo:([^\n]*) [\n] {return {"T": titulo.join("")};}
 
 Pentagrama
   = Simbolo*
