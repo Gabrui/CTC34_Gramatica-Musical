@@ -16,18 +16,24 @@
 		}
 	</style>
         
+    
+     <style>
+    body {
+    background-image: url("img/background2.jpg");
+    background-repeat: repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: 1920px 1200px
+}
+    </style>
 </head>
 
-<h1>abcjs demo page</h1>
-<p><b>abcjs</b> is an open source javascript rendering engine for interpreting abc formatted tunes.
-	It will render sheet music entirely in your browser.
-	It was written in 2009-2011 by Gregory Dyke and Paul Rosen.
-	This page demonstrates a simple implementation of it so you can see how to use it in your own pages.
-</p>
-<p>Type or paste an abc tune in the area below and see it rendered as you type. Also notice that you can click on the drawn notes and
-	see the place in the text where that note is defined.</p>
-
-<p>For more information, see <a href="https://github.com/paulrosen/abcjs" >the project page</a>.</p>
+<h1 style="text-align:left;font-family:verdana;color: whitesmoke">Music Writer
+    
+</h1>
+<table style="width:100%">
+    <tr>
+        <th>
 <textarea name="abc" id="abc" cols="80" rows="15">X: 1
 T: Cooley's
 M: 4/4
@@ -39,8 +45,18 @@ EBBA B2 EB|B2 AB defg|afe^c dBAF|DEFD E2:|
 |:gf|eB B2 efge|eB B2 gedB|A2 FA DAFA|A2 FA defg|
 eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 </textarea>
-
-
+            </th>
+            <th>
+<div id="paper0"></div>
+<!id to drawnin>
+<div id="paper1"></div>
+<!id to drawnin>
+<div id="paper2"></div>
+<!id to drawnin>
+<div id="paper3"></div>
+</th>
+    </tr>
+</table>
 
 
 <hr />
@@ -52,15 +68,17 @@ eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|
 <div id="warnings"></div>
 <div id="music"></div>
 <!id to drawnin>
-<div id="paper0"></div>
-<!id to drawnin>
-<div id="paper1"></div>
-<!id to drawnin>
-<div id="paper2"></div>
-<!id to drawnin>
-<div id="paper3"></div>
 <div id="selection"></div>
+<footer>
+    <p style="font-family:verdana;color: whitesmoke"><b>abcjs</b> is an open source javascript rendering engine for interpreting abc formatted tunes.
+	It will render sheet music entirely in your browser.
+	It was written in 2009-2011 by Gregory Dyke and Paul Rosen.
+	This page demonstrates a simple implementation of it so you can see how to use it in your own pages.
+</p>
+<p style="font-family:verdana;color: whitesmoke">Type or paste an abc tune in the area below and see it rendered as you type. Also notice that you can click on the drawn notes and
+	see the place in the text where that note is defined.</p>
 
+<p style="font-family:verdana;color: whitesmoke">For more information, see <a href="https://github.com/paulrosen/abcjs" >the project page</a>.</p></footer>
 <script type="text/javascript">
 	function selectionCallback(abcelem) {
 		var note = {};
