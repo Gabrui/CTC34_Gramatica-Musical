@@ -1,6 +1,14 @@
 Dynota = c:Cabecalho _ p:Pentagrama _ {return [c, p];}
 
-Cabecalho = "Titulo:" _ titulo:([^\n]*) [\n] {return {"T": titulo.join("")};}
+Cabecalho = t:Titulo? _ c:Compositor? _ m:Tempo? _ l:TempoNota? {let a = {}; if(t!=null) a.T=t; if(c!=null) a.C=c; if(m!=null) a.M=m; if(l!=null) a.L=l; return a;}
+
+Titulo = "Titulo:" _ titulo:([^\n]*) [\n] {return titulo.join("");}
+
+Compositor = "Compositor:" _ compositor:([^\n]*) [\n] {return compositor.join("");}
+
+Tempo = "Tempo:" _ s:([^\n]*) [\n] {return s.join("");}
+
+TempoNota = "Nota:" _  s:([^\n]*) [\n] {return s.join("");}
 
 Pentagrama
   = Simbolo*
@@ -12,7 +20,7 @@ Acidente
   = "#" / "##" / "b" / "bb"
 
 Temporizacao
-  = div:"/"? val:Inteiro {if (div!=null) val = 1/val; return val}
+  = "/" val:Inteiro {return 1/val;} / Fracao
 
 Nota "nota"
   = NotaNormalAumentada
@@ -36,6 +44,9 @@ NotaOitavaAcimaAumentada
 
 Inteiro "inteiro"
   = [0-9]+ { return parseInt(text(), 10); }
+ 
+Fracao "Fração"
+  = num:Inteiro "/"? den:Inteiro? {let resp = num; if(den!=null) resp/=den; return resp} 
 
 _ "espaços brancos"
   = [ \t\n\r]*

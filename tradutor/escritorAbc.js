@@ -21,20 +21,18 @@ function imprimirFracaoDe2 (fracao) {
 }
 
 function traduzirAbc (arvoreLexical) {
-    var saidaAbc = "";
+    var saidaAbc = "X: 1\n";
 
     // Formata o cabeçalho
     var cabecalho = arvoreLexical[0];
-    if (cabecalho.X === undefined) // ID
-        cabecalho.X = "1";
-    if (cabecalho.K === undefined) // O padrão é 4/4
-        cabecalho.K = "4/4";
+    if (cabecalho.M === undefined) // O padrão é 4/4
+        cabecalho.M = "4/4";
     if (cabecalho.L === undefined) // Unidades sendo mínimas
         cabecalho.L = "1/4";
     for (let chave in cabecalho)
         saidaAbc += chave + ": " + cabecalho[chave] + "\n";
 
-    var maxDivisao = eval(cabecalho.K);  // Atenção, risco de segurança //TODO
+    var maxDivisao = eval(cabecalho.M);  // Atenção, risco de segurança //TODO
     var valorPadrao = eval(cabecalho.L); // Atenção, risco de segurança //TODO
 
     var partitura = arvoreLexical[1];
@@ -58,8 +56,8 @@ function traduzirAbc (arvoreLexical) {
                 if (resto == maxDivisao) {
                     saidaAbc += imprimir(nota) + " | " + pular;
                 } else {
-                    saidaAbc += " (" + imprimir([nota[0], nota[1], (maxDivisao+valor-resto)/valorPadrao]) +
-                                "|"+ pular+ imprimir([nota[0], nota[1], (resto - maxDivisao)/valorPadrao]) + ") ";
+                    saidaAbc +=  imprimir([nota[0], nota[1], (maxDivisao+valor-resto)/valorPadrao]) +
+                                "-|"+ pular+ imprimir([nota[0], nota[1], (resto - maxDivisao)/valorPadrao]) + " ";
                 }
                 quantBlocosNaLinha++;
                 resto -= maxDivisao;
