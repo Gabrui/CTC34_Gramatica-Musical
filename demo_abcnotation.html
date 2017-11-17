@@ -49,6 +49,7 @@ Nota: 1/4
 
 do re mi faa fa faa do re do ree re ree do sol fa mii mi mii do re mi faa fa faa   
 </textarea>
+<! textarea escondida para receber a traducao e repassar para o abc.js realizar o desenho e gerar o arquivo midi>
 <textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%;display:none">
 X: 1
 T: Doremifá
@@ -120,6 +121,8 @@ var abcjs;
 			}
 		});
 	}
+        //Funcao para ler a traducao e atualizar o desenho da partitura e o arquivo midi
+        //Funcao que integra o parser com o desenho da partitura e o arquivo midi.
         function processarTxt(element){
             console.log(element.value);
             document.getElementById("abc").value = traduzirAbc(arvoreLexical.parse(element.value));
