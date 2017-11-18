@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
-<!It was originally written in 2009-2011 by Gregory Dyke and Paul Rosen.>
+<!Adaptado de Gregory Dyke e Paul Rosen.>
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>abcjs demo</title>
+	<title>Escritor Musical</title>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="abcjs-midi.css" media="all" rel="stylesheet" type="text/css" />
@@ -34,6 +34,7 @@ textarea#note {
     </style>
 </head>
 
+
 <h1 style="text-align:left;font-family:verdana;color: whitesmoke">Music Writer
     
 </h1>
@@ -42,6 +43,7 @@ textarea#note {
     <tr>
         <th>
 <textarea name="area" id="area" cols="80" rows="15" onkeyup="processarTxt(this)" style="height: 100%">
+
 Titulo: Doremifá
 Compositor: Gabriel
 Tempo: 4/4
@@ -49,6 +51,8 @@ Nota: 1/4
 
 do re mi faa fa faa do re do ree re ree do sol fa mii mi mii do re mi faa fa faa   
 </textarea>
+
+
 <! textarea escondida para receber a traducao e repassar para o abc.js realizar o desenho e gerar o arquivo midi>
 <textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%;display:none">
 X: 1
@@ -59,8 +63,9 @@ L: 1/4
 C D E F-|F F F2 | C D C D-|D D D2 | 
 C G F E-|E E E2 | C D E F-|F F F2 |]
 </textarea>
-            </th>
-            <th>
+</th>
+
+<th>
 <div id="paper0"></div>
 <!id to drawnin>
 <div id="paper1"></div>
@@ -69,7 +74,7 @@ C G F E-|E E E2 | C D E F-|F F F2 |]
 <!id to drawnin>
 <div id="paper3"></div>
 </th>
-    </tr>
+</tr>
 </table>
 </div>
 
@@ -84,13 +89,14 @@ C G F E-|E E E2 | C D E F-|F F F2 |]
 <div id="music"></div>
 <!id to drawnin>
 <div id="selection"></div>
-<footer>
-    <! style="font-family:verdana;color: black"><b>abcjs</b> is an open source javascript rendering engine for interpreting abc formatted tunes.
-	It will render sheet music entirely in your browser.
-	It was originally written in 2009-2011 by Gregory Dyke and Paul Rosen. And modified for integrated another grammar.https://github.com/paulrosen/abcjs>
-<p style="font-family:verdana;color: black">It uses the abc.js</p>
 
-<p style="font-family:verdana;color: black">For more information, see <a href="https://github.com/paulrosen/abcjs" ></a>.</p></footer>
+
+<footer>
+<p>Para a renderização e audio, utilizamos o <a href="https://github.com/paulrosen/abcjs">abc.js</a>, de Gregory Dyke e Paul Rosen. </p>
+</footer>
+
+
+
 <script type="text/javascript">
 	function selectionCallback(abcelem) {
 		var note = {};
