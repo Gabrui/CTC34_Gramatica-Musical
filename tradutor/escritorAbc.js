@@ -162,7 +162,9 @@ function traduzirAbc (arvoreLexical) {
     var quantMaxBlocosNaLinha = 4;
     
     for (let qVoz = 0; qVoz<vozes.length; qVoz++) {
-        let diretiva = transporInstrumento[vozes[qVoz].nomeVoz.toLowerCase()];
+        let diretiva = "";
+        if (vozes[0].nomeVoz)
+            diretiva = transporInstrumento[vozes[qVoz].nomeVoz.toLowerCase()];
         if (!diretiva)
             diretiva = 0;
         saidaVoz[qVoz] = imprimirVoz(vozes[qVoz].notas, maxDivisao/valorPadrao, quantMaxBlocosNaLinha, diretiva);
