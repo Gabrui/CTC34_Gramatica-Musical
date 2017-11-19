@@ -3,21 +3,43 @@
  * @param {Nota} nota
  * @returns {String}
  */
+let notaImpressaAnterior = null;
+let quantJuntas = 1;
+let quantJuntasMax = 4;
 function imprimir (nota) {
     var abc = {"la":"A", "si":"B", "do":"C", "re":"D", "mi":"E", "fa":"F", 
         "sol":"G", "#":"^", "##":"^^", "b":"_", "bb":"__", "pausa":"z"};
     let resultado = "";
+    if (notaImpressaAnterior && notaImpressaAnterior.tempo && nota.tempo &&
+        notaImpressaAnterior.tempo === nota.tempo) {
+        if (quantJuntas >= quantJuntasMax) {
+            quantJuntas = 0;
+            resultado += " ";
+        }
+        quantJuntas++;
+    } else {
+        quantJuntas = 1;
+        resultado += " ";
+    }
     if (nota.acidente)
         resultado += abc[nota.acidente];
     if (!nota.especial) {
+        let oitava = nota.oitava;
         resultado += abc[nota.nota];
-        if (nota.oitava===1) 
+        while(oitava>0) {
             resultado += "'";
+            oitava--;
+        }
+        while(oitava<0) {
+            resultado += ",";
+            oitava++;
+        }
         if (nota.tempo !== 1)
             resultado += imprimirFracaoDe2(nota.tempo);
     } else {
         resultado += nota.nota;
     }
+    notaImpressaAnterior = nota;
     return resultado;
 }
 
@@ -43,15 +65,17 @@ function imprimirFracaoDe2(fracao) {
  * @param {List|Notas} partitura
  * @param {Float} maxDivisao
  * @param {int} quantMaxBlocosNaLinha
+ * @param {int} transpor Quantidade de oitava abaixo a transpor
  * @returns {String|imprimirVoz.impressaoVoz}
  */
-function imprimirVoz(partitura, maxDivisao, quantMaxBlocosNaLinha) {
+function imprimirVoz(partitura, maxDivisao, quantMaxBlocosNaLinha, transpor) {
     let impressaoVoz = "";
     var tCompasso = 0;
     let quantBlocosNaLinha = 1;
     for (let i = 0; i<partitura.length; i++) {
         let nota = partitura[i];
         if (nota.tempo !== undefined) {
+            nota.oitava -= transpor;
             let valor = nota.tempo;
             tCompasso += valor;
             if (tCompasso >= maxDivisao) {
@@ -76,7 +100,7 @@ function imprimirVoz(partitura, maxDivisao, quantMaxBlocosNaLinha) {
                         nota.tempo = resto;
                         tCompasso += resto;
                         resto = 0;
-                        lig = " ";
+                        lig = "";
                     }
                     impressaoVoz += imprimir(nota) + lig;
                     if (quantBlocosNaLinha > quantMaxBlocosNaLinha) {
@@ -84,11 +108,13 @@ function imprimirVoz(partitura, maxDivisao, quantMaxBlocosNaLinha) {
                         quantBlocosNaLinha = 1;
                     }
                 }
+                quantJuntas = 1;
+                notaImpressaAnterior = null;
             } else {
-                impressaoVoz += imprimir(nota)+" ";
+                impressaoVoz += imprimir(nota);
             }
-        } else {
-            impressaoVoz += imprimir(nota)+" "; // Nota especial
+        } else if (nota!==null && nota!==undefined) {
+            impressaoVoz += " "+imprimir(nota)+" "; // Nota especial
         }
     }
     var diminuir = 0;
@@ -99,6 +125,18 @@ function imprimirVoz(partitura, maxDivisao, quantMaxBlocosNaLinha) {
     impressaoVoz = impressaoVoz.substr(0, impressaoVoz.length - diminuir);
     impressaoVoz += "|]\n";
     return impressaoVoz;
+}
+
+let instrumento = {null:0, "piano":0, "violino":40, "celo":42, "flauta":73};
+let transporInstrumento = {"celo":2, "piano esquerdo":2};
+let diretivasInstrumento = {
+    "bateria": "clef=perc\n%%MIDI channel 10\n",
+    "celo": "clef=bass\n",
+    "piano esquerdo": "clef=bass\n"};
+
+for (let di=0; di<7; di++) {
+    diretivasInstrumento.bateria+="%%MIDI drummap "+String.fromCharCode(97+di)+" "+(di+35)+"\n";
+    diretivasInstrumento.bateria+="%%MIDI drummap "+String.fromCharCode(65+di)+" "+(di+42)+"\n";
 }
 
 
@@ -123,16 +161,26 @@ function traduzirAbc (arvoreLexical) {
     var saidaVoz = [];
     var quantMaxBlocosNaLinha = 4;
     
-    for (let qVoz = 0; qVoz<vozes.length; qVoz++)
-        saidaVoz[qVoz] = imprimirVoz(vozes[qVoz].notas, maxDivisao/valorPadrao, quantMaxBlocosNaLinha);
+    for (let qVoz = 0; qVoz<vozes.length; qVoz++) {
+        let diretiva = transporInstrumento[vozes[qVoz].nomeVoz.toLowerCase()];
+        if (!diretiva)
+            diretiva = 0;
+        saidaVoz[qVoz] = imprimirVoz(vozes[qVoz].notas, maxDivisao/valorPadrao, quantMaxBlocosNaLinha, diretiva);
+    }
     
-    if (saidaVoz.length === 1)
+    if (saidaVoz.length === 1 && !vozes[0].nomeVoz)
         return saidaAbc + saidaVoz[0];
     
-    let instrumento = {null:0, "piano":0, "violino":40};
     for (let qVoz = 0; qVoz<vozes.length; qVoz++) {
-        saidaAbc += "V: "+(qVoz+1)+"\n";
-        saidaAbc += "%%MIDI program "+instrumento[vozes[qVoz].nomeVoz.toLowerCase()]+"\n";
+        let diretiva = diretivasInstrumento[vozes[qVoz].nomeVoz.toLowerCase()];
+        if (!diretiva)
+            diretiva = "\n";
+        saidaAbc += "V: "+(qVoz+1)+" ";
+        saidaAbc += diretiva;
+        let numInstrumento = instrumento[vozes[qVoz].nomeVoz.toLowerCase()];
+        if (!numInstrumento)
+            numInstrumento = 0;
+        saidaAbc += "%%MIDI program "+numInstrumento+"\n";
         saidaAbc += saidaVoz[qVoz];
     }
     

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<!Adaptado de Gregory Dyke e Paul Rosen.>
+<!--Adaptado de Gregory Dyke e Paul Rosen.-->
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -31,12 +31,18 @@ textarea#note {
 	width:100%;
         resize: both;
 }
+
+textarea {
+	border: 3px solid #fff;
+	padding: 5px;
+	font-family: Tahoma, sans-serif;
+}
     </style>
 </head>
 
 
-<h1 style="text-align:left;font-family:verdana;color: whitesmoke">Music Writer
-    
+<h1 style="text-align:center;font-family:Tahoma, sans-serif;color:darkblue;font-size: xx-large">
+    Music Writer
 </h1>
 <div>
 <table style="width:100%">
@@ -48,31 +54,23 @@ Titulo: Doremifá
 Compositor: Gabriel
 Tempo: 4/4
 Nota: 1/4
+Velocidade: 1/4=130
 
-do re mi faa fa faa do re do ree re ree do sol fa mii mi mii do re mi faa fa faa   
+Instrumento: Piano
+do re mi faa fa faa do re do ree re ree do sol fa mii mi mii do re mi faa fa faa
+
+Instrumento: Violino
+mi fa do si sii re doo re mii faa sol la si doo ree sol la si doo ree mii faa sii
 </textarea>
 
 
-<! textarea escondida para receber a traducao e repassar para o abc.js realizar o desenho e gerar o arquivo midi>
-<textarea name="abc" id="abc" cols="80" rows="15" style="height: 100%;">
-X: 1
-T: Doremifá
-C: Gabriel
-M: 4/4
-L: 1/4
-C D E F-|F F F2 | C D C D-|D D D2 | 
-C G F E-|E E E2 | C D E F-|F F F2 |]
+<!-- textarea escondida para receber a traducao e repassar para o abc.js realizar o desenho e gerar o arquivo midi-->
+<textarea name="abc" id="abc" cols="80" rows="15" style="background: transparent;border: none;color: black;">
 </textarea>
 </th>
 
 <th>
-<div id="paper0"></div>
-<!id to drawnin>
-<div id="paper1"></div>
-<!id to drawnin>
-<div id="paper2"></div>
-<!id to drawnin>
-<div id="paper3"></div>
+<div id="desenho"></div>
 </th>
 </tr>
 </table>
@@ -80,14 +78,20 @@ C G F E-|E E E2 | C D E F-|F F F2 |]
 
 
 <hr />
-<!control midi panel>
+<!--Tocador onlin-->
 <div id="midi"></div>
-<!link para download>
+<!--link para download-->
 <div id="midi-download"></div> 
-<!Place the warnings>
+<div id="abc-download"></div> 
+<div>
+    <textarea id="codigoabc2midi" style="width:10px;height:10px;"></textarea>
+    <button onclick="myFunction()">Copiar Código abc2midi</button>
+</div>
+<div id="abc2midi-download"> </div>
+<!--Avisos-->
 <div id="warnings"></div>
 <div id="music"></div>
-<!id to drawnin>
+<!--Area de desenho-->
 <div id="selection"></div>
 
 
@@ -110,7 +114,7 @@ C G F E-|E E E2 | C D E F-|F F F2 |]
 	}
 var abcjs;
 	function initEditor() {
-		abcjs = new ABCJS.Editor("abc", { paper_id: "paper0",
+		abcjs = new ABCJS.Editor("abc", { paper_id: "desenho",
 			generate_midi: true,
 			midi_id:"midi",
 			midi_download_id: "midi-download",
@@ -124,15 +128,28 @@ var abcjs;
 				listener: { highlight: selectionCallback }
 			}
 		});
+                processarTxt(document.getElementById("area"));
 	}
         //Funcao para ler a traducao e atualizar o desenho da partitura e o arquivo midi
         //Funcao que integra o parser com o desenho da partitura e o arquivo midi.
         function processarTxt(element){
-            console.log(element.value);
-            document.getElementById("abc").value = traduzirAbc(arvoreLexical.parse(element.value));
-            console.log(document.getElementById("abc").value);
+            let abc = traduzirAbc(arvoreLexical.parse(element.value));
+            document.getElementById("abc").value = abc;
+            document.getElementById("codigoabc2midi").value = 
+                    'echo "'+abc+'" > som.abc\nabc2midi som.abc -o som.midi\nvlc som.midi\n';
+            document.getElementById("abc2midi-download").innerHTML = 
+                    "<a href=\"data:text/plain,"+encodeURIComponent("#!/bin/sh\necho '"+abc+"' > som.abc\nabc2midi som.abc -o som.midi\nvlc som.midi")+
+                    "\" download='traduzido.sh'>Executar abc2midi</a>";
+            document.getElementById("abc-download").innerHTML = 
+                    "<a href='data:audio/abc,"+encodeURIComponent(abc)+"' download='traduzido.abc'>Download ABC</a>";
             abcjs.fireChanged();
         }
+        
+        function myFunction() {
+            var copyText = document.getElementById("codigoabc2midi");
+            copyText.select();
+            document.execCommand("Copy");
+        }   
 
 	window.addEventListener("load", initEditor, false);
 </script>
